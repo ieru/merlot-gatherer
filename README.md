@@ -1,8 +1,8 @@
 merlot-gatherer
 ===============
 
-This is a java project for extracting information from MERLOT repository (www.merlot.org) and calculate web 
-metrics from each material. It saves all the information into a MySQL Server database for statistical study.
+This is a project written in Java that scraps the MERLOT repository (www.merlot.org) and provides tools to compute  
+metrics for each learning resource. It stores all the information in a MySQL Server database that can be later used for anlytics.
 
 Created under LGPL license.
 
