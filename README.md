@@ -6,7 +6,7 @@ This is a library written in Java that scraps the MERLOT learning object reposit
 If you want to cite this or know how this can be used for analytics please use this reference:
 
 
-Cechinel, C., Sánchez-Alonso, S. and García-Barriocanal, E. (2011). Statistical profiles of highly-rated learning objects. Comput. Educ. 57(1), pp. 1255-1269.
+* Cechinel, C., Sánchez-Alonso, S. and García-Barriocanal, E. (2011). Statistical profiles of highly-rated learning objects. Comput. Educ. 57(1), pp. 1255-1269.
 
 Created under LGPL license.
 
