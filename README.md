@@ -1,7 +1,7 @@
 merlot-gatherer
 ===============
 
-This is a library written in Java that scraps the MERLOT learning object repository (www.merlot.org) and provides tools to compute metrics for the learning resources. It stores all the information in a MySQL Server database that can be later used for analytics.
+A library written in Java that scraps the MERLOT learning object repository (www.merlot.org) and provides tools to compute metrics for the learning resources. It stores all the information in a MySQL Server database that can be later used for analytics.
 
 If you want to cite this or know how this can be used for analytics please use this reference:
 
