@@ -40,8 +40,15 @@ public class Crawler {
     /**
      * Class' constructor
      */
-    public Crawler()
+    private String _databaseName;
+    private String _databaseUser;
+    private String _databasePass;
+
+    public Crawler(String databaseName,String databaseUser,String databasePass)
     {
+        _databaseName = databaseName;
+        _databaseUser = databaseUser;
+        _databasePass = databasePass;
     }
 
     /**
@@ -51,7 +58,7 @@ public class Crawler {
      */
     public void CrawlMaterials()
     {
-        DBConnection dbMerlot = new DBConnection("dbcrawlermerlot");
+        DBConnection dbMerlot = new DBConnection(_databaseName,_databaseUser,_databasePass);
         System.out.println("Connected to database");
         //We connect to the principal web of materials
         Materials webMaterials = new Materials();
@@ -210,13 +217,13 @@ public class Crawler {
      * them to obtain metrics and inserting them into the metrics' database
      */
     public void CrawlMetrics() {
-        DBConnection dbMerlot = new DBConnection("dbcrawlermerlot");
+        DBConnection dbMerlot = new DBConnection(_databaseName,_databaseUser,_databasePass);
 
         Config.LoggerProvider = LoggerProvider.DISABLED;
         Date fecha_hora_inicio = new Date(); //Show time
         System.out.println("Time : " + fecha_hora_inicio); //Show time
         //we create the metrics table if it doesn't exists
-        dbMerlot.createTableMerlot();
+        dbMerlot.createTableMerlot(_databaseName,_databaseUser,_databasePass);
         //we count all the locations we have to check
         int top = dbMerlot.countUrlsMerlot();
         //we create a list of IDs
@@ -225,10 +232,10 @@ public class Crawler {
         dbMerlot.createListLocationMerlot();
         MetricsParser parser = new MetricsParser();
 
-        for (int i = 1; i < 1310 ; i++) { // TO START IN A DIFFERENT POINT, n+1 of the rows of the DB
-            dbMerlot.getNextIdLo(); // TO START IN A DIFFERENT POINT, n+1 of the rows of the DB
-            dbMerlot.getNextLocation(); // TO START IN A DIFFERENT POINT, n+1 of the rows of the DB
-        }
+        //for (int i = 1; i < 1310 ; i++) { // TO START IN A DIFFERENT POINT, n+1 of the rows of the DB
+        //    dbMerlot.getNextIdLo(); // TO START IN A DIFFERENT POINT, n+1 of the rows of the DB
+        //    dbMerlot.getNextLocation(); // TO START IN A DIFFERENT POINT, n+1 of the rows of the DB
+        //}
         
         for (int row = 1; row <= top; row++) {
             try {
@@ -414,7 +421,7 @@ public class Crawler {
      */
     public void UpdateUsers()
     {
-        DBConnection dbMerlot = new DBConnection("dbcrawlermerlot");
+        DBConnection dbMerlot = new DBConnection(_databaseName,_databaseUser,_databasePass);
 
         int top = dbMerlot.countUsersMerlot();
         dbMerlot.createListIdUserMerlot();

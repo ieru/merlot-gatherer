@@ -42,7 +42,7 @@ public class DBConnection {
      * It connects to a database
      * @param database
      */
-    public DBConnection(String database)
+    public DBConnection(String database,String user,String password)
     {
           try
           {
@@ -50,8 +50,8 @@ public class DBConnection {
            //         ("jdbc:mysql://localhost/" + database + "?" +
            //         "user=admin&password=admin");
                Properties props = new Properties();
-               props.put("user", "admin");
-               props.put("password","admin");
+               props.put("user", user);
+               props.put("password",password);
                props.put("autoReconnect", "true");
                _con = DriverManager.getConnection("jdbc:mysql://localhost/"+database,props);
           }
@@ -814,13 +814,13 @@ public class DBConnection {
     /**
      * Creates the merlot's metrics table if it doesn't exist
      */
-    public void createTableMerlot() {
+    public void createTableMerlot(String databaseName,String databaseUser,String databasePass) {
         try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
             String url = "jdbc:mysql://localhost/";
-            Connection connection = DriverManager.getConnection(url, "admin", "admin");
+            Connection connection = DriverManager.getConnection(url, databaseUser, databasePass);
             Statement stmt = connection.createStatement();
-            stmt.executeUpdate("CREATE  TABLE IF NOT EXISTS `dbcrawlermerlot`.`Metrics` (" +
+            stmt.executeUpdate("CREATE  TABLE IF NOT EXISTS `"+databaseName+"`.`Metrics` (" +
                     "`lodata_ID_LO` INT UNSIGNED NOT NULL ," +
                     " `Links_number` INT NULL DEFAULT 0 ," +
                     " `Links_unique_number` INT NULL DEFAULT 0 ," +

@@ -17,6 +17,12 @@
 package merlotcrawler;
 
 import java.io.*;
+import org.w3c.dom.Document;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  *
@@ -31,50 +37,91 @@ public class Main {
         //If a you need to use a proxy
         //System.setProperty("http.proxyHost", "proxy");
         //System.setProperty("http.proxyPort", "8080");
+        String executionMethod = "";
+        String databaseName = "";
+        String databaseUser = "";
+        String databasePass = "";
 
-        InputStreamReader inp = new InputStreamReader(System.in) ;
-        BufferedReader br = new BufferedReader(inp);
-
-        System.out.println("Choose Execution : ");
-        System.out.println("1. Complete (Obtain Materials + Obtain Metrics)");
-        System.out.println("2. Obtain Materials");
-        System.out.println("3. Obtain Metrics");
-        System.out.println("4. Update Users");
-        System.out.print(">");
-
-        String str="";
-        try{
-            str = br.readLine();
-            if(str.equals("1"))
+        if (args.length > 0)
+        {
+            executionMethod = args[0];
+            if(!executionMethod.equals("-total") && !executionMethod.equals("-onlyMaterials") && !executionMethod.equals("-onlyMetrics") && !executionMethod.equals("-updateUsers"))
             {
-                System.out.println("Complete Execution");
-                Crawler crawler = new Crawler();
-                crawler.CrawlMaterials();
-                crawler.CrawlMetrics();
-                System.exit(0);
-            }else if(str.equals("2"))
-            {
-                System.out.println("Obtain Materials");
-                Crawler crawler = new Crawler();
-                crawler.CrawlMaterials();
-                System.exit(0);
-            }else if(str.equals("3"))
-            {
-                System.out.println("Obtain Metrics");
-                Crawler crawler = new Crawler();
-                crawler.CrawlMetrics();
-                System.exit(0);
-            }else if(str.equals("4"))
-            {
-                System.out.println("Update Users");
-                Crawler crawler = new Crawler();
-                crawler.UpdateUsers();
-                System.exit(0);
+                System.out.println("Error! Incorrect execution method");
+                System.out.println("Execution methods available:");
+                System.out.println("-total: obtain materials + obtain metrics");
+                System.out.println("-onlyMaterials: obtain materials");
+                System.out.println("-onlyMetrics: obtain materials");
+                System.out.println("-updateUsers: obtain materials");
+                System.exit(1);
             }
-        }catch(Exception e){
-            System.out.println("Error! Exiting program + " + e.getMessage());
-            //System.exit(0);
         }
-        
+        else
+        {
+            System.out.println("Error! You must indicate an execution method by parameter");
+            System.out.println("Execution methods available:");
+            System.out.println("-total: obtain materials + obtain metrics");
+            System.out.println("-onlyMaterials: obtain materials");
+            System.out.println("-onlyMetrics: obtain materials");
+            System.out.println("-updateUsers: update users' database");
+            System.exit(1);
+        }
+
+        //We read the config file
+        try{
+            DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
+            Document doc = docBuilder.parse(new File("./config/config.xml"));
+            doc.getDocumentElement().normalize();
+            NodeList databaseConfig = doc.getElementsByTagName("database");
+            Node databaseNode = databaseConfig.item(0);
+            Element databaseElement = (Element)databaseNode;
+            NodeList nameList = databaseElement.getElementsByTagName("Name");
+            Element nameElement = (Element)nameList.item(0);
+            NodeList textNameList = nameElement.getChildNodes();
+            databaseName=(((Node)textNameList.item(0)).getNodeValue().trim());
+
+            NodeList userList = databaseElement.getElementsByTagName("User");
+            Element userElement = (Element)userList.item(0);
+            NodeList textUserList = userElement.getChildNodes();
+            databaseUser=(((Node)textUserList.item(0)).getNodeValue().trim());
+
+            NodeList passList = databaseElement.getElementsByTagName("Pass");
+            Element passElement = (Element)passList.item(0);
+            NodeList textPassList = passElement.getChildNodes();
+            databasePass=(((Node)textPassList.item(0)).getNodeValue().trim());
+        }
+        catch(Exception e)
+        {
+            System.out.println("Error reading config.xml file: " + e.getMessage());
+            System.exit(1);
+        }
+
+        if(executionMethod.equals("-total"))
+        {
+            System.out.println("Complete Execution");
+            Crawler crawler = new Crawler(databaseName,databaseUser,databasePass);
+            crawler.CrawlMaterials();
+            crawler.CrawlMetrics();
+            System.exit(0);
+        }else if(executionMethod.equals("-onlyMaterials"))
+        {
+            System.out.println("Obtain Materials");
+            Crawler crawler = new Crawler(databaseName,databaseUser,databasePass);
+            crawler.CrawlMaterials();
+            System.exit(0);
+        }else if(executionMethod.equals("-onlyMetrics"))
+        {
+            System.out.println("Obtain Metrics");
+            Crawler crawler = new Crawler(databaseName,databaseUser,databasePass);
+            crawler.CrawlMetrics();
+            System.exit(0);
+        }else if(executionMethod.equals("-updateUsers"))
+        {
+            System.out.println("Update Users");
+            Crawler crawler = new Crawler(databaseName,databaseUser,databasePass);
+            crawler.UpdateUsers();
+            System.exit(0);
+        }
     }//main void's end
 }//main class' end
