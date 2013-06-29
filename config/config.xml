@@ -1,0 +1,7 @@
+<configuration>
+	<database>
+		<Name>dbcrawlermerlot</Name>
+		<User>admin</User>
+		<Pass>admin</Pass>
+	</database>
+</configuration>
